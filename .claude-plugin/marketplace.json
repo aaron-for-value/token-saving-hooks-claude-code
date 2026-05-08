@@ -4,7 +4,7 @@
   "plugins": [
     {
       "name": "token-saving-hooks",
-      "source": { "source": "local", "path": "/Users/enigmaseeking/works/token-saving-hooks" }
+      "source": { "source": "github", "repo": "aaron-for-value/token-saving-hooks" }
     }
   ]
 }
