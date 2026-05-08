@@ -1,0 +1,10 @@
+{
+  "name": "token-saving-hooks-marketplace",
+  "owner": { "name": "aaron-for-value" },
+  "plugins": [
+    {
+      "name": "token-saving-hooks",
+      "source": { "source": "local", "path": "/Users/enigmaseeking/works/token-saving-hooks" }
+    }
+  ]
+}
