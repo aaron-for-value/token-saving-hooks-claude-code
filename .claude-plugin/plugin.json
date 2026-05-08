@@ -1,6 +1,5 @@
 {
   "name": "token-saving-hooks",
   "version": "1.0.0",
-  "description": "Token-saving hooks for Claude Code: Read dedup, diff compression, ctx auto-compact, quality gate",
-  "hooks": "./hooks/hooks.json"
+  "description": "Token-saving hooks for Claude Code: Read dedup, diff compression, ctx auto-compact, quality gate"
 }
