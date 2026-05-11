@@ -21,7 +21,7 @@ A Claude Code plugin that reduces token consumption through automated hooks:
 ### Step 1: Add marketplace
 
 ```
-/plugin marketplace add aaron-for-value/token-saving-hooks
+/plugin marketplace add https://github.com/aaron-for-value/token-saving-hooks-claude-code
 ```
 
 ### Step 2: Install plugin
