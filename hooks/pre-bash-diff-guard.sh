@@ -3,7 +3,8 @@
 INPUT=$(cat)
 CMD=$(echo "$INPUT" | jq -r '.tool_input.command // ""')
 
-if echo "$CMD" | grep -qE '\bgit\s+diff\b'; then
+CMD_STRIPPED=$(echo "$CMD" | sed "s/\"[^\"]*\"//g; s/'[^']*'//g")
+if echo "$CMD_STRIPPED" | grep -qE '\bgit\s+diff\b'; then
   # 放行：只看统计/文件名，输出量本身已经很小
   if echo "$CMD" | grep -qE '\-\-(stat|name-only|name-status|shortstat)'; then
     exit 0

@@ -75,5 +75,6 @@ git diff | bash "${CLAUDE_PLUGIN_ROOT}/scripts/compress-diff.sh"
 
 ## Known limitations
 
-- Windows: hooks are bash + Python scripts. Native Windows (no WSL) is not supported.
-- Codex: see [Codex installation](#installation--codex) below (coming soon).
+- **Windows**: hooks are bash + Python scripts. Native Windows (no WSL) is not supported.
+- **Codex**: see [Codex installation](#installation--codex) below (coming soon).
+- **Bash diff guard — escaped quotes**: The guard strips `"..."` and `'...'` content before scanning for `git diff`, so commit messages containing `git diff` no longer trigger false positives. However, escaped quotes inside strings (e.g. `git commit -m "fix \"git diff\" output"`) are not handled — the inner escaped quote will not be stripped and may still cause a false positive.
