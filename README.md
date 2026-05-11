@@ -18,17 +18,23 @@ A Claude Code plugin that reduces token consumption through automated hooks:
 
 **Requirements:** Claude Code v2.1.92+, Git installed on your machine.
 
-### Step 1: Add marketplace
+### Option A: Global install (personal, all projects)
 
-```
-/plugin marketplace add https://github.com/aaron-for-value/token-saving-hooks-claude-code
+```bash
+claude plugin marketplace add https://github.com/aaron-for-value/token-saving-hooks-claude-code
+claude plugin install token-saving-hooks@token-saving-hooks-marketplace
 ```
 
-### Step 2: Install plugin
+### Option B: Project-level install (shared with team via `.claude/settings.json`)
 
+Run inside your project directory:
+
+```bash
+claude plugin marketplace add https://github.com/aaron-for-value/token-saving-hooks-claude-code --scope project
+claude plugin install token-saving-hooks@token-saving-hooks-marketplace --scope project
 ```
-/plugin install token-saving-hooks@token-saving-hooks-marketplace
-```
+
+This writes the plugin config into `.claude/settings.json`, so anyone who clones the repo gets the same hooks automatically.
 
 ### Step 3: Reload
 
@@ -48,7 +54,7 @@ This checks that Git is available and initializes a repo if needed. The hooks re
 
 ### Optional: Status line
 
-Add to `~/.claude/settings.json` or `.claude/settings.json`:
+Add to `~/.claude/settings.json` (global) or `.claude/settings.json` (project):
 
 ```json
 "statusLine": {
