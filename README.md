@@ -18,25 +18,22 @@ A Claude Code plugin that reduces token consumption through automated hooks:
 
 **Requirements:** Claude Code v2.1.92+, Git installed on your machine.
 
-### Option A: Global install (personal, all projects)
+Project-level installation is recommended — the plugin config is stored in `.claude/settings.json` and shared with your team automatically when they clone the repo.
 
-```bash
-claude plugin marketplace add https://github.com/aaron-for-value/token-saving-hooks-claude-code
-claude plugin install token-saving-hooks@token-saving-hooks-marketplace
-```
+### Step 1 & 2: Add marketplace and install plugin
 
-### Option B: Project-level install (shared with team via `.claude/settings.json`)
-
-Run inside your project directory:
+Run the following in your **terminal** from the project directory (not inside Claude Code):
 
 ```bash
 claude plugin marketplace add https://github.com/aaron-for-value/token-saving-hooks-claude-code --scope project
 claude plugin install token-saving-hooks@token-saving-hooks-marketplace --scope project
 ```
 
-This writes the plugin config into `.claude/settings.json`, so anyone who clones the repo gets the same hooks automatically.
+![Terminal showing plugin install](docs/iShot_2026-05-11_15.43.01.png)
 
-### Step 3: Reload
+### Step 3: Reload plugins
+
+Run inside **Claude Code**:
 
 ```
 /reload-plugins
@@ -44,17 +41,21 @@ This writes the plugin config into `.claude/settings.json`, so anyone who clones
 
 ### Step 4: Setup (first time per project)
 
-Run in your project directory:
+Run inside **Claude Code**:
 
 ```
 /setup
 ```
 
-This checks that Git is available and initializes a repo if needed. The hooks rely on `git rev-parse` to locate the project root — the project must be a Git repo.
+This checks that Git is available and initializes a repo if needed. It also stages existing non-hidden files so `git diff` has a baseline to work with.
+
+![/setup command in Claude Code](docs/iShot_2026-05-11_15.42.46.png)
+
+![/setup execution result](docs/iShot_2026-05-11_15.42.38.png)
 
 ### Optional: Status line
 
-Add to `~/.claude/settings.json` (global) or `.claude/settings.json` (project):
+Add to `.claude/settings.json` (project) or `~/.claude/settings.json` (global):
 
 ```json
 "statusLine": {
