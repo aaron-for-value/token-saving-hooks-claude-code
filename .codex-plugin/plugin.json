@@ -1,7 +1,7 @@
 {
   "name": "token-saving-hooks",
   "version": "1.0.0",
-  "description": "Token-saving lifecycle hooks for Codex and Claude Code: read dedup, diff compression, context snapshots, auto-compact nudges, and quality gates.",
+  "description": "Token-saving lifecycle hooks for Codex: read dedup, diff compression, context snapshots, auto-compact nudges, and quality gates.",
   "author": {
     "name": "aaron-for-value",
     "url": "https://github.com/aaron-for-value"

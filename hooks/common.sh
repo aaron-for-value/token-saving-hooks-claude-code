@@ -1,37 +1,15 @@
 #!/bin/bash
 
 token_saving_host() {
-  if [ -n "${CODEX_HOOK_HOST:-}" ]; then
-    echo "codex"
-    return
-  fi
-  if [ -n "${CLAUDE_HOOK_HOST:-}" ]; then
-    echo "claude"
-    return
-  fi
-  if [ -n "${CLAUDE_PLUGIN_ROOT:-}" ]; then
-    echo "claude"
-    return
-  fi
-  if [ -n "${CODEX_HOME:-}" ]; then
-    echo "codex"
-    return
-  fi
   echo "codex"
 }
 
 token_saving_state_prefix() {
-  case "$(token_saving_host)" in
-    codex) echo "codex" ;;
-    *) echo "claude" ;;
-  esac
+  echo "codex"
 }
 
 token_saving_project_dir_name() {
-  case "$(token_saving_host)" in
-    codex) echo ".codex" ;;
-    *) echo ".claude" ;;
-  esac
+  echo ".codex"
 }
 
 token_saving_session_id() {

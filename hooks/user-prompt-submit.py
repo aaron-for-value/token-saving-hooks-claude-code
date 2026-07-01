@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
-# user-prompt-submit.py — UserPromptSubmit hook（合并版）
-# 职责1：读取 StatusLine 写入的 ctx 信号文件，>= 55% 时注入 /compact 指令
+# user-prompt-submit.py — Codex UserPromptSubmit hook
+# 职责1：读取 Codex hook 输入或 ctx 信号文件，>= 55% 时注入 /compact 指令
 # 职责2：中英文双语冗余词压缩（原 user-prompt-compress.py 逻辑）
 
 import json, sys, os, re, time
@@ -8,22 +8,38 @@ import json, sys, os, re, time
 data = json.load(sys.stdin)
 prompt = data.get("prompt", "")
 session_id = data.get("session_id") or data.get("sessionId") or "default"
-host = "claude" if os.environ.get("CLAUDE_PLUGIN_ROOT") else "codex"
-if os.environ.get("CLAUDE_HOOK_HOST"):
-    host = "claude"
-if os.environ.get("CODEX_HOOK_HOST") or os.environ.get("CODEX_HOME"):
-    host = "codex"
-state_prefix = "codex" if host == "codex" else "claude"
+state_prefix = "codex"
 
 additional_parts = []
 
 # ══════════════════════════════════════════════════════════════════
 # 职责1：检测 ctx 使用率，>= 55% 时注入 /compact 指令
 # ══════════════════════════════════════════════════════════════════
+pct = None
+for path in (
+    ("context_window", "used_percentage"),
+    ("contextWindow", "usedPercentage"),
+    ("context", "used_percentage"),
+    ("context", "usedPercentage"),
+):
+    try:
+        cursor = data
+        for key in path:
+            cursor = cursor[key]
+        pct = int(float(cursor))
+        break
+    except Exception:
+        pass
+
 state_file = f"/tmp/.{state_prefix}_ctx_pct_{session_id}"
-if os.path.exists(state_file):
+if pct is None and os.path.exists(state_file):
     try:
         pct = int(open(state_file).read().strip())
+    except Exception:
+        pct = None
+
+if pct is not None:
+    try:
         # 防抖：同一 session 10 分钟内只触发一次
         flag_file = f"/tmp/.{state_prefix}_compact_flag_{session_id}"
         should_trigger = True
@@ -35,7 +51,7 @@ if os.path.exists(state_file):
         if pct >= 55 and should_trigger:
             open(flag_file, 'w').close()
             # exit 2 阻止消息发送，stderr 直接显示给用户
-            # Claude 无法执行 /compact（它是 CLI 斜杠命令），必须由用户手动输入
+            # Codex slash command must be sent by the user.
             sys.stderr.write(
                 f"⚠️  Context 已达 {pct}%（阈值 55%），消息已暂停发送。\n"
                 f"请先输入 /compact，compact 后再重新发送消息。\n"

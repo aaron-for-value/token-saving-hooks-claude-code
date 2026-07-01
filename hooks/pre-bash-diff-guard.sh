@@ -17,7 +17,7 @@ if echo "$CMD_STRIPPED" | grep -qE '\bgit\s+diff\b'; then
   if echo "$CMD" | grep -qE '\-\-unified=0|\-U0'; then
     exit 0
   fi
-  # 从脚本自身路径推算 plugin root，避免依赖 CLAUDE_PLUGIN_ROOT 环境变量
+  # Resolve from the script path so the hook works from any session cwd.
   PLUGIN_ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
   echo "BLOCK: git diff must be piped through compress-diff.sh to reduce token usage. Use: git diff ... | bash \"${PLUGIN_ROOT}/scripts/compress-diff.sh\"" >&2
   exit 2

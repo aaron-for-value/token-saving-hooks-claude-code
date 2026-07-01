@@ -28,4 +28,4 @@ find . -maxdepth 5 -type f -not -path './.git/*' -not -name '.*' -not -path '*/.
 
 - Write test logs to `.codex/last_test_output.txt`.
 - Use `git diff --stat`, `git diff --name-only`, `git diff -U0`, or pipe full diffs through `scripts/compress-diff.sh`.
-- Keep Claude-specific state under `.claude/`; Codex state belongs under `.codex/`.
+- Keep plugin state under `.codex/`.

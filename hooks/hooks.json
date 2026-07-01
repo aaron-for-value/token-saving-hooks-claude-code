@@ -4,7 +4,7 @@
       {
         "hooks": [{
           "type": "command",
-          "command": "python3 \"${CLAUDE_PLUGIN_ROOT:-.}/hooks/user-prompt-submit.py\"",
+          "command": "python3 ./hooks/user-prompt-submit.py",
           "timeout": 5
         }]
       }
@@ -14,7 +14,7 @@
         "matcher": "Read",
         "hooks": [{
           "type": "command",
-          "command": "bash \"${CLAUDE_PLUGIN_ROOT:-.}/hooks/pre-tool-dedup.sh\""
+          "command": "bash ./hooks/pre-tool-dedup.sh"
         }]
       },
       {
@@ -22,11 +22,11 @@
         "hooks": [
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT:-.}/hooks/pre-bash-diff-guard.sh\""
+            "command": "bash ./hooks/pre-bash-diff-guard.sh"
           },
           {
             "type": "command",
-            "command": "bash \"${CLAUDE_PLUGIN_ROOT:-.}/hooks/pre-bash-dedup.sh\""
+            "command": "bash ./hooks/pre-bash-dedup.sh"
           }
         ]
       }
@@ -36,7 +36,7 @@
         "matcher": "Read",
         "hooks": [{
           "type": "command",
-          "command": "bash \"${CLAUDE_PLUGIN_ROOT:-.}/hooks/post-tool-dedup.sh\""
+          "command": "bash ./hooks/post-tool-dedup.sh"
         }]
       }
     ],
@@ -44,7 +44,7 @@
       {
         "hooks": [{
           "type": "command",
-          "command": "bash \"${CLAUDE_PLUGIN_ROOT:-.}/hooks/precompact-snapshot.sh\"",
+          "command": "bash ./hooks/precompact-snapshot.sh",
           "timeout": 15
         }]
       }
@@ -53,7 +53,7 @@
       {
         "hooks": [{
           "type": "command",
-          "command": "bash \"${CLAUDE_PLUGIN_ROOT:-.}/hooks/session-start-restore.sh\"",
+          "command": "bash ./hooks/session-start-restore.sh",
           "timeout": 5
         }]
       }
@@ -62,7 +62,7 @@
       {
         "hooks": [{
           "type": "command",
-          "command": "bash \"${CLAUDE_PLUGIN_ROOT:-.}/hooks/stop-quality-gate.sh\""
+          "command": "bash ./hooks/stop-quality-gate.sh"
         }]
       }
     ]
