@@ -69,6 +69,17 @@ Use setup-token-saving-hooks for this project.
 
 The skill checks Git, initializes a repository if needed, creates `.codex/`, and stages existing non-hidden files so `git diff` has a baseline.
 
+## Publishing Hygiene
+
+Before pushing this plugin or a fork to a public remote, run a sensitive-information scan and remove anything user-specific:
+
+- API keys, tokens, cookies, bearer strings, session IDs, and OAuth credentials
+- Personal absolute paths, usernames, local workspace names, and private repository URLs
+- Conversation transcripts, imported memory files, cache files, and test output that may contain private data
+- Claude compatibility files that are not part of the Codex-only plugin surface
+
+This repository should contain only reusable hook code, Codex plugin metadata, setup skill instructions, and public documentation.
+
 ## Known Limitations
 
 - Windows without WSL is not supported because hooks are Bash + Python scripts.

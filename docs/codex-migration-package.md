@@ -84,7 +84,7 @@ The hook should emit `hookSpecificOutput.additionalContext` with the index only.
 
 ## Migration Steps
 
-1. Detect projects under `/Users/enigmaseeking/works`.
+1. Detect projects under the user's configured works root, for example `<home>/works`.
 2. Map each project to its Claude memory folder by encoded path.
 3. Create `<project>/.codex/memories/claude-import/`.
 4. Copy memory Markdown files unchanged.
