@@ -15,16 +15,25 @@ A Codex plugin that reduces token consumption through lifecycle hooks.
 
 ## Installation
 
-Requirements: Codex app or CLI with plugin support, Git, Bash, Python 3, and `jq`.
+Requirements: Codex app or CLI with hook support, Git, Bash, Python 3, and `jq`.
 
-Add this repository as a Codex marketplace, then install the plugin:
+Recommended project-local install:
 
 ```bash
-codex plugin marketplace add https://github.com/aaron-for-value/token-saving-hooks-claude-code
-codex plugin add token-saving-hooks@token-saving-hooks-marketplace
+git clone https://github.com/aaron-for-value/token-saving-hooks-claude-code.git
+python3 token-saving-hooks-claude-code/scripts/install-project-hooks.py --project /path/to/project
 ```
 
-Start a new Codex thread after installing so the plugin-bundled hooks are picked up. Codex may ask you to review and trust the hook definitions before non-managed command hooks run.
+This writes:
+
+- `/path/to/project/.codex/hooks.json`
+- `/path/to/project/.codex/token-saving-hooks/`
+
+The generated hook commands use absolute paths under the target project so Codex does not depend on hook execution cwd.
+
+Start a new Codex thread in the project after installing. Codex may ask you to review and trust the project hook commands before they run.
+
+The Codex plugin metadata in this repository is useful for packaging and discovery, but project-local hooks are the preferred runtime setup. Avoid running both a global plugin hook and project-level `.codex/hooks.json` for the same hook bundle.
 
 ## Plugin Layout
 
@@ -33,6 +42,7 @@ Start a new Codex thread after installing so the plugin-bundled hooks are picked
 - `hooks/hooks.json`
 - `hooks/*.sh`
 - `hooks/user-prompt-submit.py`
+- `scripts/install-project-hooks.py`
 - `skills/setup-token-saving-hooks/SKILL.md`
 
 ## Project Conventions
@@ -57,11 +67,11 @@ For diff compression, use:
 git diff | bash "$(git rev-parse --show-toplevel)/path/to/token-saving-hooks/scripts/compress-diff.sh"
 ```
 
-When the plugin is installed through Codex, the hook warning prints the installed plugin path to `compress-diff.sh`.
+When the project-local install is used, the hook warning prints the project-local path to `compress-diff.sh`.
 
 ## Setup Skill
 
-After installing the plugin, ask Codex:
+After installing project hooks, ask Codex:
 
 ```text
 Use setup-token-saving-hooks for this project.
