@@ -1,11 +1,14 @@
 #!/bin/bash
 # pre-bash-dedup.sh — Bash 纯查询命令去重（2 分钟内相同命令拦截）
-find /tmp -name ".claude_bash_cache_*" -mtime +1 -delete 2>/dev/null
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/common.sh"
+
+token_saving_cleanup_cache "bash"
 
 INPUT=$(cat)
-SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // ""')
+SESSION_ID=$(echo "$INPUT" | token_saving_session_id)
 CMD=$(echo "$INPUT" | jq -r '.tool_input.command // ""')
-CACHE_FILE="/tmp/.claude_bash_cache_${SESSION_ID}"
+CACHE_FILE=$(token_saving_cache_file "bash" "$SESSION_ID")
 
 # 只对纯查询命令去重，写操作、构建操作不受影响
 if ! echo "$CMD" | grep -qE '^\s*(cat |head |tail |grep |find |ls |git log|git status|git diff --stat|git diff --name|pnpm test|npm test|yarn test)'; then

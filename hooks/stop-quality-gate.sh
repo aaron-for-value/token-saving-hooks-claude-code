@@ -1,4 +1,7 @@
 #!/bin/bash
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/common.sh"
+
 ROOT=$(git rev-parse --show-toplevel 2>/dev/null)
 if [ -z "$ROOT" ]; then exit 0; fi
 
@@ -8,7 +11,8 @@ if [ "$(echo "$INPUT" | jq -r '.stop_hook_active // false')" = "true" ]; then
   exit 0
 fi
 
-TEST_OUTPUT="$ROOT/.claude/last_test_output.txt"
+PROJECT_DIR="$(token_saving_project_dir_name)"
+TEST_OUTPUT="$ROOT/$PROJECT_DIR/last_test_output.txt"
 if [ -f "$TEST_OUTPUT" ]; then
   # Ignore stale test output older than 5 minutes — likely from a previous session
   if [ "$(uname)" = "Darwin" ]; then

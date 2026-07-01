@@ -2,16 +2,18 @@
 # statusline.sh — StatusLine hook
 # 职责1：渲染状态栏（保持你现有的 "Model | in=X, out=Y | ctx [bar] Z%" 格式）
 # 职责2：把 used_percentage 写入信号文件，供 UserPromptSubmit 读取
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)/hooks"
+source "${SCRIPT_DIR}/common.sh"
 
 INPUT=$(cat)
-SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // "default"')
+SESSION_ID=$(echo "$INPUT" | token_saving_session_id)
 MODEL=$(echo "$INPUT" | jq -r '.model.display_name // "Claude"')
 IN_TOKENS=$(echo "$INPUT" | jq -r '.context_window.current_usage.input_tokens // 0')
 OUT_TOKENS=$(echo "$INPUT" | jq -r '.context_window.current_usage.output_tokens // 0')
 PCT=$(echo "$INPUT" | jq -r '.context_window.used_percentage // 0' | cut -d. -f1)
 
 # ── 写信号文件（供 UserPromptSubmit 读取）──────────────────────
-STATE_FILE="/tmp/.claude_ctx_pct_${SESSION_ID}"
+STATE_FILE="$(token_saving_ctx_file "$SESSION_ID")"
 echo "$PCT" > "$STATE_FILE"
 
 # ── 进度条渲染（与你现有格式一致）──────────────────────────────

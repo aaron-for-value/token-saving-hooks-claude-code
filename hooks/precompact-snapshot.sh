@@ -1,15 +1,18 @@
 #!/bin/bash
 # precompact-snapshot.sh — PreCompact hook：压缩前保存会话摘要到 CONTEXT-SNAPSHOT.md
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/common.sh"
 
 INPUT=$(cat)
 TRANSCRIPT=$(echo "$INPUT" | jq -r '.transcript_path // ""')
-CWD=$(echo "$INPUT" | jq -r '.cwd // ""')
+CWD=$(echo "$INPUT" | token_saving_cwd)
 
 if [ -z "$TRANSCRIPT" ] || [ ! -f "$TRANSCRIPT" ]; then
   exit 0
 fi
 
-SNAPSHOT="$CWD/.claude/CONTEXT-SNAPSHOT.md"
+PROJECT_DIR="$(token_saving_project_dir_name)"
+SNAPSHOT="$CWD/$PROJECT_DIR/CONTEXT-SNAPSHOT.md"
 mkdir -p "$(dirname "$SNAPSHOT")"
 
 python3 - "$TRANSCRIPT" "$SNAPSHOT" <<'PYEOF'

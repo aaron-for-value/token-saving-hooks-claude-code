@@ -1,6 +1,6 @@
 # token-saving-hooks
 
-A Claude Code plugin that reduces token consumption through automated hooks:
+A Claude Code and Codex plugin that reduces token consumption through automated hooks:
 
 | Hook | Trigger | Effect |
 |---|---|---|
@@ -66,10 +66,53 @@ Add to `.claude/settings.json` (project) or `~/.claude/settings.json` (global):
 
 ---
 
+## Installation — Codex
+
+**Requirements:** Codex app or CLI with plugin support, Git, Bash, Python 3, `jq`.
+
+Add this repository as a Codex marketplace, then install the plugin:
+
+```bash
+codex plugin marketplace add https://github.com/aaron-for-value/token-saving-hooks-claude-code
+codex plugin add token-saving-hooks@token-saving-hooks-marketplace
+```
+
+Start a new Codex thread after installing so the plugin-bundled hooks are picked up. Codex will ask you to review and trust the hook definitions before non-managed command hooks run.
+
+The Codex plugin uses:
+
+- `.codex-plugin/plugin.json`
+- `.agents/plugins/marketplace.json`
+- `hooks/hooks.json`
+
+Codex state is written under `.codex/` in each project and `/tmp/.codex_*` cache files. Claude Code state remains under `.claude/` and `/tmp/.claude_*`.
+
+### Codex project conventions
+
+For test-output quality gates, write recent test logs to:
+
+```bash
+.codex/last_test_output.txt
+```
+
+For example:
+
+```bash
+pnpm test 2>&1 | tee .codex/last_test_output.txt
+```
+
+For diff compression, use:
+
+```bash
+git diff | bash "$(git rev-parse --show-toplevel)/path/to/token-saving-hooks/scripts/compress-diff.sh"
+```
+
+When the plugin is installed through Codex, the hook warning prints the installed plugin path to `compress-diff.sh`.
+
+---
+
 ## Known limitations
 
-- **Windows**: hooks are bash + Python scripts. Native Windows (no WSL) is not supported.
-- **Other AI coding tools**: Ported versions exist for Codex and OpenCode, but have not been tested yet. Use at your own risk:
-  - Codex: [token-saving-hooks-codex](https://github.com/aaron-for-value/token-saving-hooks-codex)
-  - OpenCode: [token-saving-hooks-opencode](https://github.com/aaron-for-value/token-saving-hooks-opencode)
+- **Windows**: hooks are Bash + Python scripts. Native Windows without WSL is not supported.
+- **Codex status line**: Codex does not use the Claude Code `statusLine` setting. Prompt auto-compact still works when a compatible context-percentage signal exists; otherwise the prompt-compression part still runs and context percentage enforcement is skipped.
 - **Bash diff guard — escaped quotes**: The guard strips `"..."` and `'...'` content before scanning for `git diff`, so commit messages containing `git diff` no longer trigger false positives. However, escaped quotes inside strings (e.g. `git commit -m "fix \"git diff\" output"`) are not handled — the inner escaped quote will not be stripped and may still cause a false positive.

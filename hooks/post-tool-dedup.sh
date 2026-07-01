@@ -1,9 +1,11 @@
 #!/bin/bash
 # post-tool-dedup.sh — Read 去重，写缓存阶段
 # 只在 Read 工具成功执行后写入，避免"拦截后误记录"问题
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/common.sh"
 
 INPUT=$(cat)
-TOOL=$(echo "$INPUT" | jq -r '.tool_name // ""')
+TOOL=$(echo "$INPUT" | token_saving_tool_name)
 
 if [ "$TOOL" != "Read" ]; then
   exit 0
@@ -15,10 +17,10 @@ if [ -n "$ERROR" ]; then
   exit 0
 fi
 
-SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // ""')
+SESSION_ID=$(echo "$INPUT" | token_saving_session_id)
 AGENT_ID=$(echo "$INPUT" | jq -r '.agent_id // ""')
 CACHE_KEY="${AGENT_ID:-$SESSION_ID}"
-CACHE_FILE="/tmp/.claude_read_cache_${CACHE_KEY}"
+CACHE_FILE=$(token_saving_cache_file "read" "$CACHE_KEY")
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.path // .tool_input.file_path // ""')
 
 if [ -z "$FILE_PATH" ]; then

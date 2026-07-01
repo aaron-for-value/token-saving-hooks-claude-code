@@ -7,19 +7,25 @@ import json, sys, os, re, time
 
 data = json.load(sys.stdin)
 prompt = data.get("prompt", "")
-session_id = data.get("session_id", "")
+session_id = data.get("session_id") or data.get("sessionId") or "default"
+host = "claude" if os.environ.get("CLAUDE_PLUGIN_ROOT") else "codex"
+if os.environ.get("CLAUDE_HOOK_HOST"):
+    host = "claude"
+if os.environ.get("CODEX_HOOK_HOST") or os.environ.get("CODEX_HOME"):
+    host = "codex"
+state_prefix = "codex" if host == "codex" else "claude"
 
 additional_parts = []
 
 # ══════════════════════════════════════════════════════════════════
 # 职责1：检测 ctx 使用率，>= 55% 时注入 /compact 指令
 # ══════════════════════════════════════════════════════════════════
-state_file = f"/tmp/.claude_ctx_pct_{session_id}"
+state_file = f"/tmp/.{state_prefix}_ctx_pct_{session_id}"
 if os.path.exists(state_file):
     try:
         pct = int(open(state_file).read().strip())
         # 防抖：同一 session 10 分钟内只触发一次
-        flag_file = f"/tmp/.claude_compact_flag_{session_id}"
+        flag_file = f"/tmp/.{state_prefix}_compact_flag_{session_id}"
         should_trigger = True
         if os.path.exists(flag_file):
             age = time.time() - os.path.getmtime(flag_file)

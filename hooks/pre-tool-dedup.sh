@@ -1,13 +1,16 @@
 #!/bin/bash
 # pre-tool-dedup.sh — Read 去重，查缓存阶段（只读不写）
 # 写缓存由 post-tool-dedup.sh 在 PostToolUse 完成
-find /tmp -name ".claude_read_cache_*" -mtime +1 -delete 2>/dev/null
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/common.sh"
+
+token_saving_cleanup_cache "read"
 
 INPUT=$(cat)
-SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // ""')
+SESSION_ID=$(echo "$INPUT" | token_saving_session_id)
 AGENT_ID=$(echo "$INPUT" | jq -r '.agent_id // ""')
 CACHE_KEY="${AGENT_ID:-$SESSION_ID}"
-CACHE_FILE="/tmp/.claude_read_cache_${CACHE_KEY}"
+CACHE_FILE=$(token_saving_cache_file "read" "$CACHE_KEY")
 FILE_PATH=$(echo "$INPUT" | jq -r '.tool_input.path // .tool_input.file_path // ""')
 
 if [ -z "$FILE_PATH" ]; then

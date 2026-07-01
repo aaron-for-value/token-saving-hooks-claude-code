@@ -1,25 +1,28 @@
 #!/bin/bash
 # session-start-restore.sh — SessionStart hook
 # 仅在 /compact 后恢复上下文，/clear 和首次启动不触发
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+source "${SCRIPT_DIR}/common.sh"
 
 INPUT=$(cat)
 SOURCE=$(echo "$INPUT" | jq -r '.source // ""')
-CWD=$(echo "$INPUT" | jq -r '.cwd // ""')
-SESSION_ID=$(echo "$INPUT" | jq -r '.session_id // ""')
+CWD=$(echo "$INPUT" | token_saving_cwd)
+SESSION_ID=$(echo "$INPUT" | token_saving_session_id)
 
 # 只在 compact 后恢复，/clear（source="clear"）和 startup 不恢复
 if [ "$SOURCE" != "compact" ]; then
   exit 0
 fi
 
-SNAPSHOT="$CWD/.claude/CONTEXT-SNAPSHOT.md"
+PROJECT_DIR="$(token_saving_project_dir_name)"
+SNAPSHOT="$CWD/$PROJECT_DIR/CONTEXT-SNAPSHOT.md"
 if [ ! -f "$SNAPSHOT" ]; then
   exit 0
 fi
 
 # compact 后清除 ctx 信号文件，避免 user-prompt-submit.py 读到 compact 前的旧值
-rm -f "/tmp/.claude_ctx_pct_${SESSION_ID}"
-rm -f "/tmp/.claude_compact_flag_${SESSION_ID}"
+rm -f "$(token_saving_ctx_file "$SESSION_ID")"
+rm -f "$(token_saving_compact_flag_file "$SESSION_ID")"
 
 # 直接让 Python 读文件，避免 shell 变量传递特殊字符的注入风险
 python3 - "$SNAPSHOT" <<'PYEOF'

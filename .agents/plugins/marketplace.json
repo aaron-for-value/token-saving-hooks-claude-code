@@ -1,0 +1,20 @@
+{
+  "name": "token-saving-hooks-marketplace",
+  "interface": {
+    "displayName": "Token Saving Hooks"
+  },
+  "plugins": [
+    {
+      "name": "token-saving-hooks",
+      "source": {
+        "source": "local",
+        "path": "./"
+      },
+      "policy": {
+        "installation": "AVAILABLE",
+        "authentication": "ON_INSTALL"
+      },
+      "category": "Developer Tools"
+    }
+  ]
+}

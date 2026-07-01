@@ -1,0 +1,38 @@
+{
+  "name": "token-saving-hooks",
+  "version": "1.0.0",
+  "description": "Token-saving lifecycle hooks for Codex and Claude Code: read dedup, diff compression, context snapshots, auto-compact nudges, and quality gates.",
+  "author": {
+    "name": "aaron-for-value",
+    "url": "https://github.com/aaron-for-value"
+  },
+  "homepage": "https://github.com/aaron-for-value/token-saving-hooks-claude-code",
+  "repository": "https://github.com/aaron-for-value/token-saving-hooks-claude-code",
+  "license": "MIT",
+  "keywords": [
+    "codex",
+    "hooks",
+    "token-saving",
+    "context",
+    "diff"
+  ],
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Token Saving Hooks",
+    "shortDescription": "Lifecycle hooks that reduce repeated reads, noisy diffs, and stale stop states.",
+    "longDescription": "Token Saving Hooks adds Codex lifecycle hooks for read deduplication, repeated shell command deduplication, git diff compression guidance, pre-compact context snapshots, post-compact restore context, prompt compression, and stale test-output quality gates.",
+    "developerName": "aaron-for-value",
+    "category": "Developer Tools",
+    "capabilities": [
+      "Read",
+      "Write"
+    ],
+    "websiteURL": "https://github.com/aaron-for-value/token-saving-hooks-claude-code",
+    "defaultPrompt": [
+      "Install token-saving hooks in this project",
+      "Review my project memory and hook setup",
+      "Check whether recent test output should block stopping"
+    ],
+    "brandColor": "#2563EB"
+  }
+}
